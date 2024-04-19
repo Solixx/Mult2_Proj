@@ -52,8 +52,11 @@ public class RunLengthEncoding {
             char c = chars[i];
             if (i + 1 < chars.length && c == chars[i + 1]) {
                 count++;
-            } else {
+            } else if(count >= 4){
                 result.append(count).append(c);
+                count = 1;
+            }else {
+                result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
                 count = 1;
             }
         }
@@ -252,12 +255,18 @@ public class RunLengthEncoding {
         System.out.println("Econde: " + rle.wordEncoded);
         System.out.println("Decode: " + rle.wordDecoded);
 
-        File file = new File("E:\\GitHub\\Mult2_Proj\\Strings");
+        File file = new File("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\Strings");
+        // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\Strings
+        // E:\GitHub\Mult2_Proj\Strings
         rle.gerarPalavraAleatoria(file, 10, 20, 10);
         rle.runLengthEncodingTextFile(file);
-        rle.runLengthDecodeTextFile(new File("E:\\GitHub\\Mult2_Proj\\StringsEncoded"));
+        rle.runLengthDecodeTextFile(new File("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\StringsEncoded"));
+        // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\StringsEncoded
+        // E:\GitHub\Mult2_Proj\StringsEncoded
 
-        File file2 = new File("E:\\GitHub\\Mult2_Proj\\TesteSegundoModo");
+        File file2 = new File("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\TesteSegundoModo");
+        // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\TesteSegundoModo
+        // E:\GitHub\Mult2_Proj\TesteSegundoModo
         rle.passoApasso(file2);
     }
 }
