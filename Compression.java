@@ -2,6 +2,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+import java.io.*;
+import java.util.Scanner;
+
 public class Compression {
     private static int rangeLimit = 5;
 
@@ -93,6 +107,145 @@ public class Compression {
             default:
                 return (byte) 0;
         }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String uChoice = "";
+        System.out.println("Compressao e descompressao de imagens\n Escolha uma opcao");
+        System.out.println("\n\t 1. Comprimir a imagem \n\t 2. Carregar imagem comprimida e descomprimir ");
+
+
+         uChoice = scanner.nextLine();
+        System.out.println("Escolheu a opcao: " + uChoice);
+
+        switch (uChoice) {
+            case "1":
+                compressImage();
+                break;
+            case "2":
+                loadImageFromDisk("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\Images\\CompressedOutput.ckcomp");
+                break;
+            default:
+                System.out.println("Opcao invalida");
+                break;
+        }
+    }
+
+    /**
+     *  Runs the compression, information and decompression algorithms.
+     */
+    private static void compressImage() {
+        ImgCompressed compressedImage;
+        File imgPath;
+        boolean isPPM = false; //Different way of reading a PPM file. Other files can just use the Java Library.
+        System.out.println("Please select an image file to compress...");
+        FileDialog fd = new FileDialog(new JFrame(), "Choose a file", FileDialog.LOAD); //Windows dialog to select file.
+        fd.setDirectory("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\Images");
+        fd.setVisible(true);
+        if (fd.getFile() == null) {
+            System.out.println("Nenhum ficheiro escolhido, encerrando o programa...");
+            return;
+        } else
+            imgPath = new File(fd.getDirectory() + fd.getFile());
+
+        if (fd.getFile().contains("ppm")) //crude and highly unreliable way to check if its PPM (improve in future)
+            isPPM = true;
+
+        System.out.println("The File Selected: " + imgPath + " | PPM: " + isPPM);
+
+        BufferedImage img = null;
+        try {
+            if (isPPM)
+            {
+//                ImageDecoder ppmImgDecoder = ImageCodec.createImageDecoder("PNM", new File(String.valueOf(imgPath)), null);
+//                img = new RenderedImageAdapter(ppmImgDecoder.decodeAsRenderedImage()).getAsBufferedImage();
+            }
+            else {
+                img = ImageIO.read(imgPath);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /* Ask user to choose a compression rate. Where 0 is lossless, beyond is high compression*/
+        System.out.print("Please enter a compression rate (0 = Lossless TO 10(+) = High Compression Rate, Lower Quality: ");
+        Scanner scanner = new Scanner(System.in);
+        int compressRate = scanner.nextInt();
+        compressedImage = Compression.runCompressionAlg(img, compressRate); //Run Compression Algorithm
+        compareImageSize(imgPath, compressedImage); //Show the compression ration
+        //compareImageSize(img, compressedImage); //Show the compression ratio
+        compressedImage.outputToFile(fd.getDirectory() + "\\"); //Output the compressed image to a file (ckcomp file)
+
+
+        System.out.println("------------------------------------------------------------------------");
+        System.out.println("Press any key to run decompression algorithm FROM MEMORY...");
+
+        Scanner pauser = new Scanner(System.in);
+        pauser.nextLine();
+        pauser.close();
+
+        //Decompression.runDecompressAlg(fd.getDirectory() + "\\output\\", compressedImage); //Run Decompression Algorithm
+    }
+
+    /**
+     * Outputs information regarding size of original and compress image size.
+     * @param originalImagePath The original image path
+     * @param compressedImage The compressed image in memory
+     */
+    private static void compareImageSize(File originalImagePath, ImgCompressed compressedImage)
+    {
+        long originalImgSize = originalImagePath.length();
+        long compressedImgSize = compressedImage.getTotalByteSize();
+        System.out.println("**********************************************");
+
+        System.out.println("Compression Information:");
+        System.out.println("\tCompression Level (0 - Lossless. Higher Number has greater compress rate but less Quality: " + compressedImage.getCompressLevel());
+        System.out.println("\tOriginal Image Size (Bytes): " + originalImgSize);
+        System.out.println("\tCompressed Image Size (Bytes): " + compressedImgSize);
+
+        double percentageSaved = (double) Math.round(((double) (originalImgSize - compressedImgSize) / originalImgSize) * 100 * 100) / 100;
+        System.out.println("\tPercent Saved (2dp): " + percentageSaved + "%");
+
+        System.out.println("**********************************************");
+    }
+
+    private static ImgCompressed loadImageFromDisk(String compressedImgPath) {
+        /* IMPORANT TO NOTE: Potential off-by-ones. Make sure when read to increment lengths by 1 to ensure correct byte is read!!!*/
+        BufferedReader firstLineReader;
+        ImgCompressed compressedImg = null;
+
+        byte[] redArray;
+        byte[] greenArray;
+        byte[] blueArray;
+
+        try {
+            firstLineReader = new BufferedReader(new FileReader(compressedImgPath));
+            String firstLineText = firstLineReader.readLine();
+            String[] picOptionsArr = firstLineText.split(","); //Gives first line of file in array: [width, height, compressLevel, redLen, greenLen, blueLen]
+
+            int imgWidth = Integer.parseInt(picOptionsArr[0]);
+            int imgHeight = Integer.parseInt(picOptionsArr[1]);
+            int compressLevel = Integer.parseInt(picOptionsArr[2]);
+            redArray = new byte[Integer.parseInt(picOptionsArr[3])];
+            greenArray = new byte[Integer.parseInt(picOptionsArr[4])]; //Set length of colour-level byte arrays from the pic options.
+            blueArray = new byte[Integer.parseInt(picOptionsArr[5])];
+
+            FileInputStream fis = new FileInputStream(compressedImgPath); //Create Byte Stream Array Reader
+            long skip = fis.skip(firstLineText.getBytes().length + 1); //Ignore the first-line (skip the byte length), since we have the picOptions already
+            /* Read each colour level byte array */
+            fis.read(redArray);
+            fis.read(greenArray);
+            fis.read(blueArray);
+            compressedImg = new ImgCompressed(imgWidth, imgHeight, redArray, greenArray, blueArray, compressLevel);
+            Decompression.runDecompressAlg("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\Images", compressedImg);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return compressedImg;
     }
 
 }
