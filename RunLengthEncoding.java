@@ -53,7 +53,7 @@ public class RunLengthEncoding {
             if (i + 1 < chars.length && c == chars[i + 1]) {
                 count++;
             } else if(count >= 4){
-                result.append(count).append(c);
+                result.append('#').append(count).append(c);
                 count = 1;
             }else {
                 result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
