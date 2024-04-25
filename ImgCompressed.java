@@ -33,6 +33,10 @@ public class ImgCompressed {
 
         System.out.println("A compressed image object was created in memory. Total Size of Image (Bytes): " + totalByteSize);
     }
+    public StringBuilder compImagem(byte[] data, int count, StringBuilder result){
+
+        return result;
+    }
 
     public byte[] getRedCompressed() { return redRLCompressed; }
 

@@ -14,6 +14,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Compression {
@@ -54,7 +56,8 @@ public class Compression {
                 int runCounter = 1; //Run Length Counter
                 int pixelColourCounter = getColourLevel(img, colourCode, x, y); //Keep count of pixel values (for mean value)
                 byte curPixelValue = getColourLevel(img, colourCode, x, y); //Used to compare the next pixel colour value with this.
-
+                System.out.println("pixelColour" + pixelColourCounter);
+                System.out.println("curPixelValue" + curPixelValue);
                 for (int ix = x + 1; ix < imgWidth + 1; ix++) { //For each next pixel from x -> imgwidth or to runlength.
                     if (ix == imgWidth) {
                         x = imgWidth; //Break row if its reached the end of image width.
@@ -109,27 +112,108 @@ public class Compression {
         }
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String uChoice = "";
-        System.out.println("Compressao e descompressao de imagens\n Escolha uma opcao");
-        System.out.println("\n\t 1. Comprimir a imagem \n\t 2. Carregar imagem comprimida e descomprimir ");
+    public static void main(String[] args) throws IOException {
+        //Scanner scanner = new Scanner(System.in);
+        //String uChoice = "";
+        //System.out.println("Compressao e descompressao de imagens\n Escolha uma opcao");
+        //System.out.println("\n\t 1. Comprimir a imagem \n\t 2. Carregar imagem comprimida e descomprimir ");
 
+        BufferedImage bImage = ImageIO.read(new File("C:\\Github\\Mult2_Proj\\Images\\Lenna.png"));
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bImage, "jpg", bos);  // Converte a imagem em um array de bytes
+        byte[] data = bos.toByteArray();
+        int count=1;
+        StringBuilder result= new StringBuilder();
+        result=compImagem(data,count,result);
+        String outputFileName = "C:\\Github\\Mult2_Proj\\Images\\compressed_image.dat";
+        writeCompressedDataToFile(result.toString(), outputFileName);
+        byte[] decompressedImageData = decompressImage(result.toString());
 
-         uChoice = scanner.nextLine();
-        System.out.println("Escolheu a opcao: " + uChoice);
-
-        switch (uChoice) {
-            case "1":
-                compressImage();
-                break;
-            case "2":
-                loadImageFromDisk("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\Images\\CompressedOutput.ckcomp");
-                break;
-            default:
-                System.out.println("Opcao invalida");
-                break;
+        // Crie um ByteArrayInputStream com os dados do array de bytes
+        ByteArrayInputStream bis = new ByteArrayInputStream(decompressedImageData);
+        System.out.println("bisss" + bis);
+        try{
+        // Carregue a imagem a partir do ByteArrayInputStream
+        BufferedImage image = ImageIO.read(bis);
+        if(image!=null){
+            File outputFile = new File("imagem.png");
+            ImageIO.write(image, "png", outputFile);
+            System.out.println("criada");
         }
+        else{
+            System.out.println("nao deu");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+        System.out.println("\n\n\n");
+        System.out.println(result);
+
+
+         //uChoice = scanner.nextLine();
+        //System.out.println("Escolheu a opcao: " + uChoice);
+
+        //switch (uChoice) {
+          //  case "1":
+            //    compressImage();
+              //  break;
+            //case "2":
+              //  loadImageFromDisk("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\Images\\CompressedOutput.ckcomp");
+                //break;
+            //default:
+              //  System.out.println("Opcao invalida");
+               // break;
+       // }
+    }
+
+    private static StringBuilder compImagem(byte[] data, int count, StringBuilder result) {
+        for (int i = 0; i < data.length; i++) {
+            // Verifica se o byte está na faixa de 1 a 255
+            if ((data[i] & 0xFF) >= 1 && (data[i] & 0xFF) <= 255) {
+                if(i+1< data.length && data[i] == data[i+1]){
+                    count++;
+                }
+                else if(count>=4){
+                    result.append("255").append(count).append(data[i] & 0xFF);
+                    count=1;
+                }
+                else{
+                    result.append(String.join("", Collections.nCopies(count, String.valueOf(data[i] & 0xFF))));
+                    count=1;
+                }
+                System.out.println("Byte: " + (data[i] & 0xFF));
+            }
+        }
+        return result;
+    }
+    private static void writeCompressedDataToFile(String compressedData, String fileName) {
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(fileName))) {
+            bos.write(compressedData.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private static byte[] decompressImage(String compressedData) {
+        byte[] decompressedImageData = new byte[compressedData.length()]; // Tamanho pode ser ajustado conforme necessário
+        int index = 0;
+        for (int i = 0; i < compressedData.length(); i++) {
+            char currentChar = compressedData.charAt(i);
+            if (currentChar == '2' && i + 2 < compressedData.length()) {
+                char nextChar = compressedData.charAt(i + 1);
+                char nextNextChar = compressedData.charAt(i + 2);
+                int count = Integer.parseInt(String.valueOf(nextChar));
+                int value = Integer.parseInt(String.valueOf(nextNextChar));
+                for (int j = 0; j < count; j++) {
+                    decompressedImageData[index++] = (byte) value;
+                }
+                i += 2; // Pula os próximos dois caracteres
+            } else {
+                decompressedImageData[index++] = (byte) currentChar;
+            }
+        }
+        // Agora você tem os dados descomprimidos em decompressedImageData
+        return decompressedImageData;
     }
 
     /**

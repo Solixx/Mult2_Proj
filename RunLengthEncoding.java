@@ -67,13 +67,13 @@ public class RunLengthEncoding {
         StringBuilder result = new StringBuilder();
         char[] chars = this.wordEncoded.toCharArray();
 
-        int count = 0;
+        int count = 1;
         for (char c : chars) {
             if (Character.isDigit(c)) {
                 count = 10 * count + Character.getNumericValue(c);
             } else {
                 result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
-                count = 0;
+                count = 1;
             }
         }
 
@@ -90,13 +90,16 @@ public class RunLengthEncoding {
                 String word = myReader.nextLine();
                 char[] chars = word.toCharArray();
 
-                int count = 0;
+                int count = 1;
                 for (char c : chars) {
                     if (Character.isDigit(c)) {
                         count = 10 * count + Character.getNumericValue(c);
                     } else {
+                        if(count==0){
+                            count=1;
+                        }
                         result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
-                        count = 0;
+                        count = 1;
                     }
                 }
 
@@ -162,7 +165,7 @@ public class RunLengthEncoding {
             pw.write(String.valueOf(stringToWriteFinal));
             pw.close();
 
-            File testeCodificado = new File("E:\\GitHub\\Mult2_Proj\\TestSegundoModoPassoAPassoCodificado");
+            File testeCodificado = new File("C:\\GitHub\\Mult2_Proj\\TestSegundoModoPassoAPassoCodificado");
 
             // Descodificacao
             StringBuilder result = new StringBuilder();
@@ -174,7 +177,7 @@ public class RunLengthEncoding {
 
                 char[] chars = stringToWrite.toString().toCharArray();
 
-                int count = 0;
+                int count = 1;
                 for (char c : chars) {
 
                     stringToWriteFinal.append("Character Lido: ").append(c);
@@ -186,7 +189,7 @@ public class RunLengthEncoding {
                         stringToWriteFinal.append("\n");
                     } else {
                         result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
-                        count = 0;
+                        count = 1;
                         stringToWriteFinal.append("Descodificao: ").append(result);
                         stringToWriteFinal.append("\n");
                     }
@@ -255,16 +258,16 @@ public class RunLengthEncoding {
         System.out.println("Econde: " + rle.wordEncoded);
         System.out.println("Decode: " + rle.wordDecoded);
 
-        File file = new File("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\Strings");
+        File file = new File("C:\\Github\\Mult2_Proj\\Strings");
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\Strings
         // E:\GitHub\Mult2_Proj\Strings
         rle.gerarPalavraAleatoria(file, 10, 20, 10);
         rle.runLengthEncodingTextFile(file);
-        rle.runLengthDecodeTextFile(new File("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\StringsEncoded"));
+        rle.runLengthDecodeTextFile(new File("C:\\Github\\Mult2_Proj\\StringsEncoded"));
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\StringsEncoded
         // E:\GitHub\Mult2_Proj\StringsEncoded
 
-        File file2 = new File("C:\\Users\\User\\Desktop\\UFP\\Git-Hub\\Mult2_Proj\\TesteSegundoModo");
+        File file2 = new File("C:\\Github\\Mult2_Proj\\TesteSegundoModo");
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\TesteSegundoModo
         // E:\GitHub\Mult2_Proj\TesteSegundoModo
         rle.passoApasso(file2);
