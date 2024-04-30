@@ -98,7 +98,9 @@ public class RunLengthEncoding {
                         if(count==0){
                             count=1;
                         }
-                        result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
+                        if(c!='#'){
+                            result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
+                        }
                         count = 1;
                     }
                 }
