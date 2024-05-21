@@ -266,12 +266,12 @@ public class RunLengthEncoding {
         System.out.println("Econde: " + rle.wordEncoded);
         System.out.println("Decode: " + rle.wordDecoded);
 
-        File file = new File("C:\\Github\\Mult2_Proj\\Strings");
+        File file = new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Strings");
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\Strings
         // E:\GitHub\Mult2_Proj\Strings
         rle.gerarPalavraAleatoria(file, 10, 20, 10);
         rle.runLengthEncodingTextFile(file);
-        rle.runLengthDecodeTextFile(new File("C:\\Github\\Mult2_Proj\\StringsEncoded"));
+        rle.runLengthDecodeTextFile(new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\StringsEncoded"));
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\StringsEncoded
         // E:\GitHub\Mult2_Proj\StringsEncoded
 

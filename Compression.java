@@ -51,14 +51,26 @@ public class Compression {
                 }
             }
         }
-        writeCompressedDataToFile(result.toString(), "C:\\Github\\Mult2_Proj\\Images\\compressed_image.txt");
-        writeCompressedDataToFile(compressedData, "C:\\Github\\Mult2_Proj\\Images\\compressed_image.bin");
+        writeCompressedDataToFile(result.toString(), "C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Images\\compressed_image.txt");
+        writeCompressedDataToFile(compressedData, "C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Images\\compressed_image.bin");
         System.out.println("Imagem comprimida com sucesso!!!");
         return compressedData;
     }
+
     private static void writeCompressedDataToFile(ArrayList<Byte> compressedData, String fileName) {
         try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(fileName)))) {
             for (Byte b : compressedData) {
+                bos.write(b);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void writeCompressedDataToFileNormalArray(byte[] compressedData, String fileName) {
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(fileName))) {
+            for (byte b : compressedData) {
                 bos.write(b);
             }
 
@@ -100,6 +112,31 @@ public class Compression {
         return decompressedImageData;
     }
 
+    private static byte[] decompressImageNormalArray(ArrayList<Byte> compressedData) {
+        ArrayList<Integer> compressedDataIntegerList = byteToInt(compressedData);
+
+        ArrayList<Integer> decompressedImageDataList = new ArrayList<>();
+
+        for ( Integer index : compressedDataIntegerList) {
+            if(index == 255){
+                Integer count = compressedDataIntegerList.get(index+1);
+                Integer value = compressedDataIntegerList.get(index+2);
+                for (int i = 0; i < count; i++) {
+                    decompressedImageDataList.add(value);
+                }
+            }else {
+                decompressedImageDataList.add(index);
+            }
+        }
+
+        byte[] decompressedImageData = new byte[decompressedImageDataList.size()];
+        for (int i = 0; i < decompressedImageDataList.size(); i++) {
+            decompressedImageData[i] = decompressedImageDataList.get(i).byteValue();
+        }
+
+        return decompressedImageData;
+    }
+
     private static ArrayList<Integer> byteToInt(ArrayList<Byte> compressedData) {
         ArrayList<Integer> decompressedImageDataList = new ArrayList<>();
         for (Byte b: compressedData ) {
@@ -108,24 +145,23 @@ public class Compression {
         return decompressedImageDataList;
     }
     public static void main(String[] args) throws IOException {
-        //BufferedImage bImage = ImageIO.read(new File("C:\\Github\\Mult2_Proj\\Images\\Lenna.sgi"));
-        //ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        //ImageIO.write(bImage, "sgi", bos);  // Converte a imagem em um array de bytes
-        ArrayList<Byte> teste =  new ArrayList<Byte>();
-        byte[] data = Files.readAllBytes(Path.of("C:\\Github\\Mult2_Proj\\Images\\tesdt_img.sgi"));
-        for (int i=0 ;i <data.length;i++){
-            teste.add(data[i]);
-        }
+
+        byte[] data = Files.readAllBytes(Path.of("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Images\\tesdt_img.sgi"));
+
         ArrayList<Byte> result = compImagem(data);
-        ArrayList<Byte> decompressedImageData = decompressImage(teste);
+        ArrayList<Byte> decompressedImageData = decompressImage(result);
         writeCompressedDataToFile(decompressedImageData,"images/sopinha.sgi");
+
+
         // Reconstruir a imagem a partir dos dados descomprimidos
-        //ByteArrayInputStream bis = new ByteArrayInputStream(decompressedImageData);
-        //System.out.println(bis.available());
+        byte[] decompressedImageDataArray = decompressImageNormalArray(result);
+        ByteArrayInputStream bis = new ByteArrayInputStream(decompressedImageDataArray);
+        writeCompressedDataToFileNormalArray(decompressedImageDataArray, "DescLennaDecomp.sgi");
+        System.out.println(bis.available());
         //BufferedImage reconstructedImage = ImageIO.read(bis);
 
         // Salvar a imagem reconstruída em um arquivo
-      //  File outputImageFile = new File("C:\\Github\\Mult2_Proj\\Images\\LennaDecomp.sgi");
+        //File outputImageFile = new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Images\\LennaDecomp.sgi");
         //ImageIO.write(reconstructedImage, "sgi", outputImageFile);
 
 
