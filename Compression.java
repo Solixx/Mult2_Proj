@@ -51,9 +51,8 @@ public class Compression {
                 }
             }
         }
-        System.out.println("niogga\n"+result);
-        writeCompressedDataToFile(result.toString(), "C:\\Github\\Mult2_Proj\\Images\\compressed_image.txt");
-        writeCompressedDataToFile(compressedData, "C:\\Github\\Mult2_Proj\\Images\\compressed_image.bin");
+        writeCompressedDataToFile(result.toString(), "C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Images\\compressed_image.txt");
+        writeCompressedDataToFile(compressedData, "C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Images\\compressed_image.bin");
         System.out.println("Imagem comprimida com sucesso!!!");
         return compressedData;
     }
@@ -113,7 +112,7 @@ public class Compression {
         //ByteArrayOutputStream bos = new ByteArrayOutputStream();
         //ImageIO.write(bImage, "sgi", bos);  // Converte a imagem em um array de bytes
         ArrayList<Byte> teste =  new ArrayList<Byte>();
-        byte[] data = Files.readAllBytes(Path.of("C:\\Github\\Mult2_Proj\\Images\\tesdt_img.sgi"));
+        byte[] data = Files.readAllBytes(Path.of("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Images\\tesdt_img.sgi"));
         for (int i=0 ;i <data.length;i++){
             teste.add(data[i]);
         }

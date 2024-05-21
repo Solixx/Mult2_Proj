@@ -67,13 +67,13 @@ public class RunLengthEncoding {
         StringBuilder result = new StringBuilder();
         char[] chars = this.wordEncoded.toCharArray();
 
-        int count = 1;
+        int count = 0;
         for (char c : chars) {
             if (Character.isDigit(c)) {
                 count = 10 * count + Character.getNumericValue(c);
             } else {
                 result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
-                count = 1;
+                count = 0;
             }
         }
 
@@ -90,7 +90,7 @@ public class RunLengthEncoding {
                 String word = myReader.nextLine();
                 char[] chars = word.toCharArray();
 
-                int count = 1;
+                int count = 0;
                 for (char c : chars) {
                     if (Character.isDigit(c)) {
                         count = 10 * count + Character.getNumericValue(c);
@@ -101,7 +101,7 @@ public class RunLengthEncoding {
                         if(c!='#'){
                             result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
                         }
-                        count = 1;
+                        count = 0;
                     }
                 }
 
@@ -120,103 +120,103 @@ public class RunLengthEncoding {
         }
     }
 
-    public void passoApasso(File file){
-        try {
-            Scanner myReader = new Scanner(file);
-            StringBuilder stringToWriteFinal = new StringBuilder();
-            StringBuilder stringToWrite = new StringBuilder();
-
-            while(myReader.hasNextLine()){
-                StringBuilder result = new StringBuilder();
-                String word = myReader.nextLine();
-
-                stringToWriteFinal.append("Linha Original: ").append(word);
-                stringToWriteFinal.append("\n");
-
-                int count = 1;
-                char[] chars = word.toCharArray();
-                for (int i = 0; i < chars.length; i++) {
-                    char c = chars[i];
-
-                    stringToWriteFinal.append("Character Lido: ").append(c);
-                    stringToWriteFinal.append("\n");
-
-                    if (i + 1 < chars.length && c == chars[i + 1]) {
-                        count++;
-                        stringToWriteFinal.append("Charater repetido logo incrementa count: ").append(count);
-                        stringToWriteFinal.append("\n");
-                    } else {
-                        result.append(count).append(c);
-                        count = 1;
-                        stringToWriteFinal.append("Codificacao: ").append(result);
-                        stringToWriteFinal.append("\n");
-                    }
-                }
-                String encodedWord = result.toString();
-                stringToWriteFinal.append("Linha Codificada: ").append(encodedWord);
-                stringToWriteFinal.append("\n");
-
-                stringToWrite.append(encodedWord);
-                stringToWrite.append("\n");
-            }
-
-            stringToWriteFinal.append("Paragrafo Codificado: ").append(stringToWrite);
-            stringToWriteFinal.append("\n");
-
-            PrintWriter pw = new PrintWriter(new FileWriter(new File("TestSegundoModoPassoAPassoCodificado")));
-            pw.write(String.valueOf(stringToWriteFinal));
-            pw.close();
-
-            File testeCodificado = new File("C:\\GitHub\\Mult2_Proj\\TestSegundoModoPassoAPassoCodificado");
-
-            // Descodificacao
-            StringBuilder result = new StringBuilder();
-            stringToWriteFinal = new StringBuilder();
-
-
-                stringToWriteFinal.append("Paragrafo Original: ").append(stringToWrite);
-                stringToWriteFinal.append("\n");
-
-                char[] chars = stringToWrite.toString().toCharArray();
-
-                int count = 1;
-                for (char c : chars) {
-
-                    stringToWriteFinal.append("Character Lido: ").append(c);
-                    stringToWriteFinal.append("\n");
-
-                    if (Character.isDigit(c)) {
-                        count = 10 * count + Character.getNumericValue(c);
-                        stringToWriteFinal.append("Calculo do count: ").append(count);
-                        stringToWriteFinal.append("\n");
-                    } else {
-                        result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
-                        count = 1;
-                        stringToWriteFinal.append("Descodificao: ").append(result);
-                        stringToWriteFinal.append("\n");
-                    }
-                }
-
-                stringToWrite = new StringBuilder();
-
-                stringToWrite.append(result);
-                stringToWrite.append("\n");
-
-                stringToWriteFinal.append("Linha descodificada: ").append(result.toString());
-                stringToWriteFinal.append("\n");
-
-            stringToWriteFinal.append("Paragrafo Descodificado: " ).append(stringToWrite.toString());
-
-            PrintWriter pw2 = new PrintWriter(new FileWriter(new File("TestSegundoModoPassoAPassoDescodificado")));
-            pw2.write(String.valueOf(stringToWriteFinal));
-            pw2.close();
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void passoApasso(File file){
+//        try {
+//            Scanner myReader = new Scanner(file);
+//            StringBuilder stringToWriteFinal = new StringBuilder();
+//            StringBuilder stringToWrite = new StringBuilder();
+//
+//            while(myReader.hasNextLine()){
+//                StringBuilder result = new StringBuilder();
+//                String word = myReader.nextLine();
+//
+//                stringToWriteFinal.append("Linha Original: ").append(word);
+//                stringToWriteFinal.append("\n");
+//
+//                int count = 1;
+//                char[] chars = word.toCharArray();
+//                for (int i = 0; i < chars.length; i++) {
+//                    char c = chars[i];
+//
+//                    stringToWriteFinal.append("Character Lido: ").append(c);
+//                    stringToWriteFinal.append("\n");
+//
+//                    if (i + 1 < chars.length && c == chars[i + 1]) {
+//                        count++;
+//                        stringToWriteFinal.append("Charater repetido logo incrementa count: ").append(count);
+//                        stringToWriteFinal.append("\n");
+//                    } else {
+//                        result.append(count).append(c);
+//                        count = 1;
+//                        stringToWriteFinal.append("Codificacao: ").append(result);
+//                        stringToWriteFinal.append("\n");
+//                    }
+//                }
+//                String encodedWord = result.toString();
+//                stringToWriteFinal.append("Linha Codificada: ").append(encodedWord);
+//                stringToWriteFinal.append("\n");
+//
+//                stringToWrite.append(encodedWord);
+//                stringToWrite.append("\n");
+//            }
+//
+//            stringToWriteFinal.append("Paragrafo Codificado: ").append(stringToWrite);
+//            stringToWriteFinal.append("\n");
+//
+//            PrintWriter pw = new PrintWriter(new FileWriter(new File("TestSegundoModoPassoAPassoCodificado")));
+//            pw.write(String.valueOf(stringToWriteFinal));
+//            pw.close();
+//
+//            File testeCodificado = new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\TestSegundoModoPassoAPassoCodificado");
+//
+//            // Descodificacao
+//            StringBuilder result = new StringBuilder();
+//            stringToWriteFinal = new StringBuilder();
+//
+//
+//                stringToWriteFinal.append("Paragrafo Original: ").append(stringToWrite);
+//                stringToWriteFinal.append("\n");
+//
+//                char[] chars = stringToWrite.toString().toCharArray();
+//
+//                int count = 1;
+//                for (char c : chars) {
+//
+//                    stringToWriteFinal.append("Character Lido: ").append(c);
+//                    stringToWriteFinal.append("\n");
+//
+//                    if (Character.isDigit(c)) {
+//                        count = 10 * count + Character.getNumericValue(c);
+//                        stringToWriteFinal.append("Calculo do count: ").append(count);
+//                        stringToWriteFinal.append("\n");
+//                    } else {
+//                        result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
+//                        count = 1;
+//                        stringToWriteFinal.append("Descodificao: ").append(result);
+//                        stringToWriteFinal.append("\n");
+//                    }
+//                }
+//
+//                stringToWrite = new StringBuilder();
+//
+//                stringToWrite.append(result);
+//                stringToWrite.append("\n");
+//
+//                stringToWriteFinal.append("Linha descodificada: ").append(result.toString());
+//                stringToWriteFinal.append("\n");
+//
+//            stringToWriteFinal.append("Paragrafo Descodificado: " ).append(stringToWrite.toString());
+//
+//            PrintWriter pw2 = new PrintWriter(new FileWriter(new File("TestSegundoModoPassoAPassoDescodificado")));
+//            pw2.write(String.valueOf(stringToWriteFinal));
+//            pw2.close();
+//
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public void gerarPalavraAleatoria(File file, int comprimento, int numeroPalavras, int maxRepeat){
         String caracteresPermitidos = "abcdefghijklmnopqrstuvwxyz";
@@ -252,7 +252,7 @@ public class RunLengthEncoding {
     }
 
     public static void main(String[] args) {
-        RunLengthEncoding rle = new RunLengthEncoding("wwwwaaadexxxxxxywww");
+        RunLengthEncoding rle = new RunLengthEncoding("wwwwwwwwwwaaadexxxxxxywww");
 
         rle.runLengthEncodingText();
         rle.runLengthDecodeText();
@@ -260,18 +260,19 @@ public class RunLengthEncoding {
         System.out.println("Econde: " + rle.wordEncoded);
         System.out.println("Decode: " + rle.wordDecoded);
 
-        File file = new File("C:\\Github\\Mult2_Proj\\Strings");
+        File file = new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Strings");
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\Strings
         // E:\GitHub\Mult2_Proj\Strings
         rle.gerarPalavraAleatoria(file, 10, 20, 10);
         rle.runLengthEncodingTextFile(file);
-        rle.runLengthDecodeTextFile(new File("C:\\Github\\Mult2_Proj\\StringsEncoded"));
+        rle.runLengthDecodeTextFile(new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\StringsEncoded"));
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\StringsEncoded
         // E:\GitHub\Mult2_Proj\StringsEncoded
 
-        File file2 = new File("C:\\Github\\Mult2_Proj\\TesteSegundoModo");
+        File file2 = new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\TesteSegundoModo");
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\TesteSegundoModo
         // E:\GitHub\Mult2_Proj\TesteSegundoModo
-        rle.passoApasso(file2);
+        // C:\Users\manue\Desktop\GitHub\Mult2_Proj
+        //rle.passoApasso(file2);
     }
 }
