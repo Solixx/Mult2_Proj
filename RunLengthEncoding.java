@@ -72,7 +72,12 @@ public class RunLengthEncoding {
             if (Character.isDigit(c)) {
                 count = 10 * count + Character.getNumericValue(c);
             } else {
-                result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
+                if(count==0){
+                    count=1;
+                }
+                if(c!='#'){
+                    result.append(String.join("", Collections.nCopies(count, String.valueOf(c))));
+                }
                 count = 0;
             }
         }
@@ -257,19 +262,20 @@ public class RunLengthEncoding {
         rle.runLengthEncodingText();
         rle.runLengthDecodeText();
 
+        System.out.println("Original Word: wwwwwwwwwwaaadexxxxxxywww");
         System.out.println("Econde: " + rle.wordEncoded);
         System.out.println("Decode: " + rle.wordDecoded);
 
-        File file = new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\Strings");
+        File file = new File("C:\\Github\\Mult2_Proj\\Strings");
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\Strings
         // E:\GitHub\Mult2_Proj\Strings
         rle.gerarPalavraAleatoria(file, 10, 20, 10);
         rle.runLengthEncodingTextFile(file);
-        rle.runLengthDecodeTextFile(new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\StringsEncoded"));
+        rle.runLengthDecodeTextFile(new File("C:\\Github\\Mult2_Proj\\StringsEncoded"));
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\StringsEncoded
         // E:\GitHub\Mult2_Proj\StringsEncoded
 
-        File file2 = new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\TesteSegundoModo");
+        //File file2 = new File("C:\\Users\\manue\\Desktop\\GitHub\\Mult2_Proj\\TesteSegundoModo");
         // C:\Users\User\Desktop\UFP\Git-Hub\Mult2_Proj\TesteSegundoModo
         // E:\GitHub\Mult2_Proj\TesteSegundoModo
         // C:\Users\manue\Desktop\GitHub\Mult2_Proj
